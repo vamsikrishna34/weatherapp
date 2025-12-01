@@ -1,0 +1,80 @@
+/* Buttons */
+.btn-primary,
+.btn-secondary,
+.btn-icon {
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border: none;
+  outline: none;
+}
+
+.btn-primary {
+  background-color: #1976d2;
+  color: white;
+}
+.btn-primary:hover {
+  background-color: #1565c0;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background-color: #e0e0e0;
+  color: #333;
+}
+.btn-secondary:hover {
+  background-color: #d5d5d5;
+}
+
+.btn-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  font-size: 1.2rem;
+}
+
+/* Input */
+.search-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 8px 0 0 8px;
+  font-size: 1rem;
+}
+.search-input:focus {
+  outline: 2px solid #1976d2;
+  border-color: #1976d2;
+}
+
+/* Card */
+.card {
+  background-color: var(--surface-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+/* Forecast Card */
+.forecast-card {
+  background-color: var(--surface-color);
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+/* Labels/Values */
+.label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  display: block;
+}
+.value {
+  font-weight: 600;
+  font-size: 1.1rem;
+}

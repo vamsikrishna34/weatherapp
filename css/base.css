@@ -1,0 +1,55 @@
+/* Reset & Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* Light mode defaults */
+  --bg-color: #fafafa;
+  --surface-color: #ffffff;
+  --text-primary: #1a1a1a;
+  --text-secondary: #555;
+  --border-color: #e0e0e0;
+  --shadow: 0 2px 10px rgba(0,0,0,0.08);
+  --transition: all 0.3s ease;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  line-height: 1.6;
+  transition: var(--transition);
+  padding: 1rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input {
+  font-family: inherit;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.status {
+  text-align: center;
+  padding: 1rem;
+  border-radius: 8px;
+  margin: 1rem 0;
+}
+.status.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+}
