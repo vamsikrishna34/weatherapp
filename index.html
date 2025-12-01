@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Weatherly</title>
+  
+  <!-- Minimal Data URL Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🌤️</text></svg>">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="light-mode">
+  <header class="app-header">
+    <h1> Weatherly</h1>
+    <button id="theme-toggle" 
+            class="btn-icon"
+            aria-label="Toggle dark mode"
+            title="Switch theme">
+      🌓
+    </button>
+  </header>
+
+  <main class="app-main">
+    <section class="search-section">
+      <input type="text" 
+             id="location-input" 
+             class="search-input"
+             placeholder="Enter city (e.g., Chicago, Tokyo)" 
+             autocomplete="off"
+             aria-label="Enter city name">
+      <button id="search-btn" class="btn-primary" aria-label="Search weather">Search</button>
+      <button id="geolocate-btn" class="btn-secondary" aria-label="Use my location"> Use My Location</button>
+    </section>
+
+    <div id="loading" class="status hidden">Loading weather...</div>
+    <div id="error" class="status error hidden"></div>
+
+    <section id="current-weather" class="card hidden">
+      <h2 id="city-name" class="city">—</h2>
+      <div class="temp-display">
+        <span id="temp" class="temp-value">—</span>
+        <span class="temp-unit">°C</span>
+      </div>
+      <div class="weather-details">
+        <img id="weather-icon" 
+             src="" 
+             alt="" 
+             class="weather-icon"
+             onerror="this.style.display='none'"
+             aria-hidden="true">
+        <p id="description" class="description">—</p>
+      </div>
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="label">Humidity</span>
+          <span id="humidity" class="value">—%</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Wind</span>
+          <span id="wind" class="value">— m/s</span>
+        </div>
+        <div class="meta-item">
+          <span class="label">Feels Like</span>
+          <span id="feels-like" class="value">—°C</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="forecast" class="forecast-section hidden">
+      <h3 class="section-title">5-Day Forecast</h3>
+      <div id="forecast-cards" class="forecast-grid"></div>
+    </section>
+  </main>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
