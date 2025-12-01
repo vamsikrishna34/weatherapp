@@ -1,0 +1,43 @@
+/* Dark Mode Overrides */
+.dark-mode {
+  --bg-color: #121212;
+  --surface-color: #1e1e1e;
+  --text-primary: #f0f0f0;
+  --text-secondary: #aaa;
+  --border-color: #333;
+  --shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+/* Ensure smooth transitions */
+body,
+.card,
+.forecast-card {
+  transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+}
+
+/* Button contrast in dark mode */
+.dark-mode .btn-primary {
+  background-color: #90caf9;
+  color: #0d47a1;
+}
+.dark-mode .btn-primary:hover {
+  background-color: #64b5f6;
+}
+
+.dark-mode .btn-secondary {
+  background-color: #424242;
+  color: #e0e0e0;
+}
+.dark-mode .btn-secondary:hover {
+  background-color: #616161;
+}
+
+.dark-mode .search-input {
+  background-color: #2d2d2d;
+  color: #f0f0f0;
+  border-color: #444;
+}
+.dark-mode .search-input:focus {
+  outline: 2px solid #90caf9;
+  border-color: #90caf9;
+}
