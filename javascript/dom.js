@@ -13,39 +13,7 @@ export function setupEventListeners() {
   geoBtn.addEventListener('click', handleGeolocate);
 }
 
-async function handleSearch() {
-  const input = document.getElementById('location-input');
-  const query = input.value.trim();
-  if (!query) {
-    showError('Please enter a city name');
-    return;
-  }
-  await performSearch(query);
-}
 
-async function handleGeolocate() {
-  showLoading();
-  try {
-    const city = await geolocateAndSearch();
-    document.getElementById('location-input').value = city;
-    await performSearch(city);
-  } catch (err) {
-    hideLoading();
-    showError(err.message);
-  }
-}
-
-async function performSearch(query) {
-  showLoading();
-  try {
-    const data = await fetchWeather(query);
-    renderWeather(data);
-  } catch (err) {
-    showError(err.message);
-  } finally {
-    hideLoading();
-  }
-}
 
 function showLoading() {
   document.getElementById('loading').classList.remove('hidden');
@@ -64,7 +32,10 @@ function showError(message) {
   errorEl.classList.remove('hidden');
 }
 
-function renderWeather({ current, forecast }) {
+
+function renderWeather(data) {
+  const { current, forecast } = data; 
+
   // Current weather
   document.getElementById('city-name').textContent = `${current.name}, ${current.sys.country}`;
   document.getElementById('temp').textContent = formatTemp(current.main.temp);
@@ -90,7 +61,6 @@ function renderForecast(forecast) {
   const container = document.getElementById('forecast-cards');
   container.innerHTML = '';
 
-  // Pick one forecast per day (around 12:00 PM local)
   const daily = [];
   const seenDays = new Set();
 
