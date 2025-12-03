@@ -6,6 +6,11 @@ export function setupEventListeners() {
   const input = document.getElementById('location-input');
   const geoBtn = document.getElementById('geolocate-btn');
 
+  if (!searchBtn || !input || !geoBtn) {
+    console.error('Missing DOM elements. Check IDs in index.html.');
+    return;
+  }
+
   searchBtn.addEventListener('click', handleSearch);
   input.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSearch();
@@ -13,6 +18,39 @@ export function setupEventListeners() {
   geoBtn.addEventListener('click', handleGeolocate);
 }
 
+async function handleSearch() {
+  const input = document.getElementById('location-input');
+  const query = input.value.trim();
+  if (!query) {
+    showError('Please enter a city name');
+    return;
+  }
+  await performSearch(query);
+}
+
+async function handleGeolocate() {
+  showLoading();
+  try {
+    const city = await geolocateAndSearch();
+    document.getElementById('location-input').value = city;
+    await performSearch(city);
+  } catch (err) {
+    hideLoading();
+    showError(err.message);
+  }
+}
+
+async function performSearch(query) {
+  showLoading();
+  try {
+    const data = await fetchWeather(query);
+    renderWeather(data);
+  } catch (err) {
+    showError(err.message);
+  } finally {
+    hideLoading();
+  }
+}
 
 
 function showLoading() {
@@ -34,57 +72,51 @@ function showError(message) {
 
 
 function renderWeather(data) {
-  const { current, forecast } = data; 
+  const { location, current, forecast } = data;
 
   // Current weather
-  document.getElementById('city-name').textContent = `${current.name}, ${current.sys.country}`;
-  document.getElementById('temp').textContent = formatTemp(current.main.temp);
-  document.getElementById('description').textContent = current.weather[0].description;
-  document.getElementById('humidity').textContent = `${current.main.humidity}%`;
-  document.getElementById('wind').textContent = `${current.wind.speed} m/s`;
-  document.getElementById('feels-like').textContent = `${formatTemp(current.main.feels_like)}°C`;
+  document.getElementById('city-name').textContent = `${location.name}, ${location.country}`;
+  document.getElementById('temp').textContent = formatTemp(current.temp_c);
+  document.getElementById('description').textContent = current.condition.text.toLowerCase();
+  document.getElementById('humidity').textContent = `${current.humidity}%`;
+  document.getElementById('wind').textContent = `${current.wind_kph} km/h`;
+  document.getElementById('feels-like').textContent = `${formatTemp(current.feelslike_c)}°C`;
 
-  const iconCode = current.weather[0].icon;
+  
   const iconEl = document.getElementById('weather-icon');
-  iconEl.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-  iconEl.alt = current.weather[0].description;
+  iconEl.src = `https:${current.condition.icon}`;
+  iconEl.alt = current.condition.text;
   iconEl.style.display = 'inline';
 
   // Show sections
   document.getElementById('current-weather').classList.remove('hidden');
   document.getElementById('forecast').classList.remove('hidden');
 
-  renderForecast(forecast);
+  renderForecast(forecast.forecastday);
 }
 
-function renderForecast(forecast) {
+function renderForecast(dailyList) {
   const container = document.getElementById('forecast-cards');
   container.innerHTML = '';
 
-  const daily = [];
-  const seenDays = new Set();
-
-  for (const item of forecast.list) {
-    const date = new Date(item.dt * 1000);
-    const day = date.toDateString();
-    if (!seenDays.has(day) && date.getHours() >= 10 && date.getHours() <= 14) {
-      daily.push(item);
-      seenDays.add(day);
-      if (daily.length === 5) break;
-    }
-  }
-
-  daily.forEach(item => {
+  
+  dailyList.slice(0, 3).forEach(day => {
     const card = document.createElement('div');
     card.className = 'forecast-card';
+    
+    // Format date: e.g., "Mon"
+    const date = new Date(day.date);
+    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    
     card.innerHTML = `
-      <div class="day">${formatDate(item.dt)}</div>
-      <img src="https://openweathermap.org/img/wn/${item.weather[0].icon}.png" 
-           alt="${item.weather[0].description}" 
+      <div class="day">${dayName}</div>
+      <img src="https:${day.day.condition.icon}" 
+           alt="${day.day.condition.text}" 
            class="weather-icon">
       <div class="temps">
-        <span class="high">${formatTemp(item.main.temp_max)}°</span>
-        <span class="low">${formatTemp(item.main.temp_min)}°</span>
+        <span class="high">${formatTemp(day.day.maxtemp_c)}°</span>
+        <span class="low">${formatTemp(day.day.mintemp_c)}°</span>
       </div>
     `;
     container.appendChild(card);

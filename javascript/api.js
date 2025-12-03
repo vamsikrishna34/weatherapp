@@ -1,29 +1,24 @@
 
-
-const API_KEY = '439d4b80d52c420a979163e16c877e4b'; 
-const BASE_URL = 'https://api.openweathermap.org/data/2.5';
+const API_KEY = 'c0f60080e1454828b18200447250312'; 
+const BASE_URL = 'https://api.weatherapi.com/v1';  
 
 export async function fetchWeather(query) {
-  const currentUrl = `${BASE_URL}/weather?q=${encodeURIComponent(query)}&appid=${API_KEY}&units=metric`;
-  const forecastUrl = `${BASE_URL}/forecast?q=${encodeURIComponent(query)}&appid=${API_KEY}&units=metric`;
+  
+  const url = `${BASE_URL}/forecast.json?key=${API_KEY}&q=${encodeURIComponent(query)}&days=5&aqi=no`;
 
   try {
-    const [currentRes, forecastRes] = await Promise.all([
-      fetch(currentUrl),
-      fetch(forecastUrl)
-    ]);
+    const res = await fetch(url);
 
-    if (!currentRes.ok) {
-      const errData = await currentRes.json().catch(() => ({}));
-      throw new Error(errData.message || `City not found. Try: London, Tokyo, Chicago.`);
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      const message = errData.error?.message || `Failed to fetch weather for "${query}"`;
+      throw new Error(message);
     }
 
-    const current = await currentRes.json();
-    const forecast = await forecastRes.json();
-
-    return { current, forecast };
+    const data = await res.json();
+    
+    return data;
   } catch (err) {
-    // Handle network errors (e.g., offline)
     if (err.name === 'TypeError') {
       throw new Error('Network error. Check your internet connection.');
     }
@@ -41,17 +36,17 @@ export async function geolocateAndSearch() {
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
-        // ✅ Use BASE_URL and API_KEY (not hardcoded)
-        const url = `${BASE_URL}/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
         
+        const url = `${BASE_URL}/forecast.json?key=${API_KEY}&q=${latitude},${longitude}&days=1&aqi=no`;
+
         try {
           const res = await fetch(url);
           if (!res.ok) {
             const err = await res.json().catch(() => ({}));
-            throw new Error(err.message || 'Weather data unavailable for your location.');
+            throw new Error(err.error?.message || 'Weather data unavailable for your location.');
           }
           const data = await res.json();
-          resolve(data.name); // e.g., "Chicago"
+          resolve(data.location.name);
         } catch (err) {
           reject(err.message || 'Failed to fetch location-based weather.');
         }
