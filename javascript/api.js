@@ -1,8 +1,8 @@
 import { API_KEY, BASE_URL } from '../lib/config.js';
 
 export async function fetchWeather(query) {
-  const currentUrl = `$https://api.openweathermap.org/data/2.5}/weather?q=${encodeURIComponent(query)}&appid=$&units=metric`;
-  const forecastUrl = `$https://api.openweathermap.org/data/2.5}/forecast?q=${encodeURIComponent(query)}&appid=$&units=metric`;
+  const currentUrl = `$https://api.openweathermap.org/data/2.5}/weather?q=${encodeURIComponent(query)}&appid=$439d4b80d52c420a979163e16c877e4b&units=metric`;
+  const forecastUrl = `$https://api.openweathermap.org/data/2.5}/forecast?q=${encodeURIComponent(query)}&appid=$439d4b80d52c420a979163e16c877e4b&units=metric`;
 
   const [currentRes, forecastRes] = await Promise.all([
     fetch(currentUrl),
